@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "720766417174",
+    "project_id": "managercenter-8c1a5",
+    "storage_bucket": "managercenter-8c1a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720766417174:android:07f6b2af3bb0beb7fe3837",
+        "android_client_info": {
+          "package_name": "com.example.managementcenter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "720766417174-20c3cfilju6k3g9s773o1opb6vtb7hiq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX5XRDHH-O4Z-deiV5hpbqWSRJ78FsT3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "720766417174-20c3cfilju6k3g9s773o1opb6vtb7hiq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

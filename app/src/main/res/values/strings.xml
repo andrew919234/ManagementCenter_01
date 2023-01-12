@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ManagementCenter</string>
+    <string name="login_forgot">Forgot password?</string>
+    <string name="login_sign_in">Sign in</string>
+    <string name="login_version">Version 1.000.0</string>
+    <string name="login_sign_up">Sign up</string>
+    <string name="login_email_hint">電子信箱</string>
+    <string name="login_password_hint">密碼</string>
+</resources>
