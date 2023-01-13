@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ManagerLobby">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/lobby_greet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="早安！"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/lobby_itembk"
+                android:elevation="@dimen/cardview_default_elevation"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextClock
+                    android:id="@+id/lobby_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:format12Hour="yyyy年MM月dd日 (EEEE) hh點mm分"
+                    android:textSize="20sp" />
+
+                <TextClock
+                    android:id="@+id/lobby_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:format12Hour="hh:mm:ss"
+                    android:textSize="50sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="工作時間：" />
+
+                <TextView
+                    android:id="@+id/lobby_tv_worktime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="上班時間 9:00 下班時間 6:00" />
+
+                <TextView
+                    android:id="@+id/lobby_tv_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="位址" />
+            <Button
+                android:id="@+id/lobby_clockInOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#f77"
+                android:text="打卡"
+                android:textAllCaps="false" />
+            </LinearLayout>
+
+            <!--            <androidx.recyclerview.widget.RecyclerView-->
+            <!--                android:id="@+id/lobby_post"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_margin="5dp"-->
+            <!--                tools:listitem="@layout/post_item">-->
+
+            <!--            </androidx.recyclerview.widget.RecyclerView>-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_option"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                tools:listitem="@layout/option_item" />
+
+
+        </LinearLayout>
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|end"-->
+<!--        android:layout_margin="10dp"-->
+<!--        app:srcCompat="@android:drawable/ic_dialog_info" />-->
+
+</ScrollView>

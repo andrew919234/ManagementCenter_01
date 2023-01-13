@@ -6,4 +6,17 @@
     <string name="login_sign_up">Sign up</string>
     <string name="login_email_hint">電子信箱</string>
     <string name="login_password_hint">密碼</string>
+
+    <array name="option_string">
+        <item>員工列表</item>
+        <item>休假審核</item>
+        <item>班表排班</item>
+        <item>重要公告</item>
+        <item>申請紀錄</item>
+    </array>
+
+    <array name="option_sex">
+        <item>男</item>
+        <item>女</item>
+    </array>
 </resources>

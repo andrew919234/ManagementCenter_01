@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/option_bt"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:backgroundTint="#eee"
+        android:drawableTop="@drawable/baseline_work_outline_24"
+        android:drawableTint="@color/blue_700"
+        android:includeFontPadding="false"
+        android:text="休假"
+        android:textColor="@color/blue_700"
+        android:textSize="18sp" />
+
+</LinearLayout>

@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -61,7 +62,7 @@ public class Login extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(Login.this, "登入成功", Toast.LENGTH_SHORT).show();
-//                                        startActivity(new Intent(Login.this, Lobby.class));
+                                        startActivity(new Intent(Login.this, ManagerLobby.class));
                                     } else {
                                         binding.tvLoginInfo.setText("登入失敗：帳號或密碼錯誤");
                                     }
@@ -72,6 +73,13 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null)
+            startActivity(new Intent(Login.this, ManagerLobby.class));
+    }
 
     public void onResume() {
         super.onResume();
