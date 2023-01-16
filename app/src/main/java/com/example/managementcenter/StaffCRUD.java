@@ -15,7 +15,12 @@ import android.widget.Toast;
 
 import com.example.managementcenter.Resources.User;
 import com.example.managementcenter.databinding.ActivityStaffCrudBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,11 +29,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class StaffCRUD extends AppCompatActivity {
     ActivityStaffCrudBinding binding;
     private DatabaseReference db_UserRef;//資料庫參考點
+    private FirebaseAuth auth;
     private LinkedList<User> users = new LinkedList<>();
     private LinkedList<User> users_all = new LinkedList<>();
     boolean dataExit = false;
@@ -40,22 +47,24 @@ public class StaffCRUD extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setOnClick();
-        String url = "https://supportcenter-dded7-default-rtdb.firebaseio.com/";
-        FirebaseDatabase database = FirebaseDatabase.getInstance(FirebaseApp.getInstance(), url);
-        db_UserRef = database.getReference("users");
-//        db_UserRef = FirebaseDatabase.getInstance().getReference("users");
+        auth = FirebaseAuth.getInstance();
+        db_UserRef = FirebaseDatabase.getInstance().getReference("users");
     }
 
     private void setOnClick() {
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addArtist();
+                addUser();
             }
         });
         //可捲動
 //        binding.resultF.setMovementMethod(new ScrollingMovementMethod());
         //
+        binding.buttonUp.setOnClickListener(v -> {
+            updateUser();
+        });
+
         binding.buttonF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,47 +119,75 @@ public class StaffCRUD extends AppCompatActivity {
 
     }
 
-    private void addArtist() {
-//        SharedPreferences settings = getSharedPreferences("PREF", 0);
-//        String pref_email = settings.getString("PREF_EMAIL", "");
-//        String email = pref_email;
-
+    private void addUser() {
 
         String name = binding.editText.getText().toString().trim();//刪除空白字元
         String GUInumber = binding.etGuinumber.getText().toString().trim();
         String email = binding.etEmail.getText().toString().trim();
         String birthday = binding.birth.getText().toString().trim();
         String onBoardTime = binding.indate.getText().toString().trim();
-        String sex = binding.spinnerSex.getTransitionName();
+        String sex = binding.spinnerSex.getSelectedItem().toString();
+
 
 //        Query query = db_UserRef.orderByChild("email");//比對資料
         Query query = db_UserRef.orderByChild("email").equalTo(email);//比對資料
-        query.addListenerForSingleValueEvent(new ValueEventListener() {//若有相同資料，會啟動query
+        if (!TextUtils.isEmpty(name)) {
+            query.addListenerForSingleValueEvent(new ValueEventListener() {//若有相同資料，會啟動query
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                dataExit = true;
-                Toast.makeText(StaffCRUD.this, "資料已存在", Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = new User();//區域變數
+                    ArrayList<User> tmp_array = new ArrayList<>();
+                    if (snapshot.exists()) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {//取得底下資料
+                            user = ds.getValue(User.class);
+                            tmp_array.add(user);
+                        }
+                    }
+                    boolean dataApear = false;
+                    for (User e : tmp_array) {
+                        if (e.email.equals(email)) {
+                            dataApear = true;
+                            Toast.makeText(StaffCRUD.this, "資料已存在", Toast.LENGTH_SHORT).show();
+                        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+                    }
+                    if (!dataApear) {
+                        String id = db_UserRef.push().getKey();
+                        User newUser = new User(id, email, GUInumber, name, sex, birthday, onBoardTime);
+                        db_UserRef.child(id).setValue(newUser);//放入java物件
+                        reAdapter();
+                        Toast.makeText(StaffCRUD.this, "user name :" + name + "新增成功", Toast.LENGTH_SHORT).show();
+                        addUserAcount(email, GUInumber);
+                    }
+                }
 
-
-        if (!TextUtils.isEmpty(name)) {//若不是空白
-            if (dataExit) {
-                return;
-            } else {
-                String id = db_UserRef.push().getKey();
-                User newUser = new User(id, email, GUInumber, name, sex, birthday, onBoardTime);
-                db_UserRef.child(id).setValue(newUser);//放入java物件
-                reAdapter();
-                Toast.makeText(this, "user name :" + name, Toast.LENGTH_SHORT).show();
-            }
-        } else
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        } else {
             Toast.makeText(this, "請輸入名字", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addUserAcount(String email, String password) {
+
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            Toast.makeText(StaffCRUD.this, "帳號新增成功", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            Toast.makeText(StaffCRUD.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
     }
 
     private void findArtist() {
@@ -173,20 +210,6 @@ public class StaffCRUD extends AppCompatActivity {
                         users.add(e);
                     }
                 }
-//                if (snapshot.exists()) {
-//                    for (DataSnapshot ds : snapshot.getChildren()) {//取得底下資料
-//                        ar = ds.getValue(Artist.class);
-//                        tmp = ar.artistName + "/" + ar.artistGenre + "\n" + ar.artistID + "\n";
-//                        tmp_array.add(ar.artistID);
-//                        tmp_all += tmp;
-//                        artists.add(ar);
-//                    }
-//                }
-//                binding.resultF.setText(tmp_all);
-//                ArrayAdapter adapter = new ArrayAdapter(UserInfo.this, android.R.layout.simple_spinner_item, IdArray);
-//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                binding.spinnerUp.setAdapter(adapter);
-//                reAdapter();
             }
 
             @Override
@@ -196,17 +219,54 @@ public class StaffCRUD extends AppCompatActivity {
         });
     }
 
-//    private void updateArtist() {
-//        String key = binding.spinnerUp.getSelectedItem().toString();
-//        String name = binding.editText.getText().toString().trim();
-//        String genre = binding.spinner.getSelectedItem().toString();
-//        HashMap<String, Object> new_data = new HashMap<>();
-//        new_data.put("artistID", key);
-//        new_data.put("artistName", name);
-//        new_data.put("artistGenre", genre);
-//        db_ArtistRef.child(key).updateChildren(new_data);
-//        findArtist();
-//    }
+    private void updateUser() {
+        String name = binding.editText.getText().toString().trim();//刪除空白字元
+        String GUInumber = binding.etGuinumber.getText().toString().trim();
+        String email = binding.etEmail.getText().toString().trim();
+        String birthday = binding.birth.getText().toString().trim();
+        String onBoardTime = binding.indate.getText().toString().trim();
+        String sex = binding.spinnerSex.getSelectedItem().toString();
+
+        Query query = db_UserRef.orderByChild("email").equalTo(email);//比對資料
+        if (!TextUtils.isEmpty(name)) {
+            query.addListenerForSingleValueEvent(new ValueEventListener() {//若有相同資料，會啟動query
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = new User();//區域變數
+                    ArrayList<User> tmp_array = new ArrayList<>();
+                    if (snapshot.exists()) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {//取得底下資料
+                            user = ds.getValue(User.class);
+                            tmp_array.add(user);
+                        }
+                    }
+                    boolean dataApear = false;
+                    for (User e : tmp_array) {
+                        if (e.email.equals(email)) {
+                            dataApear = true;
+                            Toast.makeText(StaffCRUD.this, "資料已存在", Toast.LENGTH_SHORT).show();
+                        }
+                        if (dataApear) {
+                            HashMap<String, Object> new_data = new HashMap<>();
+                            new_data.put("email", email);
+                            new_data.put("name", name);
+                            new_data.put("sex", sex);
+                            db_UserRef.child("email").updateChildren(new_data);
+                            Toast.makeText(StaffCRUD.this, "更新成功", Toast.LENGTH_SHORT).show();
+                            refresh();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+        }
 //
 //    private void deleteArtist() {
 //        String key = binding.spinnerUp.getSelectedItem().toString();
@@ -216,6 +276,7 @@ public class StaffCRUD extends AppCompatActivity {
 //        reAdapter();
 //    }
 
+    }
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         private class MyViewHolder extends RecyclerView.ViewHolder {

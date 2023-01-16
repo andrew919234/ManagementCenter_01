@@ -18,23 +18,36 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.managementcenter.Resources.MyBroadcastReceiver;
+import com.example.managementcenter.Resources.User;
 import com.example.managementcenter.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class Login extends AppCompatActivity {
     private ActivityMainBinding binding;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private DatabaseReference db_UserRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         setOnClick();
+        db_UserRef = FirebaseDatabase.getInstance().getReference("users");
 //        hide();
     }
 
@@ -61,8 +74,7 @@ public class Login extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(Login.this, "登入成功", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(Login.this, ManagerLobby.class));
+                                        findUser();
                                     } else {
                                         binding.tvLoginInfo.setText("登入失敗：帳號或密碼錯誤");
                                     }
@@ -118,6 +130,41 @@ public class Login extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences("PREF", 0);
         settings.edit().putString("PREF_EMAIL", binding.etLoginEmailaddress.getText().toString()).apply();
         settings.edit().putString("PREF_PASSWORD", binding.etLoginPassword.getText().toString()).apply();
+    }
+
+    private void findUser() {
+        String emailaddress = binding.etLoginEmailaddress.getText().toString().trim();
+        Query query = db_UserRef.orderByChild("email");//比對資料
+        query.addListenerForSingleValueEvent(new ValueEventListener() {//若有相同資料，會啟動query
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = new User();//區域變數
+                ArrayList<User> tmp_array = new ArrayList<>();
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {//取得底下資料
+                        user = ds.getValue(User.class);
+                        tmp_array.add(user);
+                    }
+                }
+                for (User e : tmp_array) {
+                    if (e.email.equals(emailaddress)) {
+                        binding.tvLoginInfo.setText("登入失敗：請改用SupportCenterApp登入");
+                        FirebaseUser currentUser = auth.getCurrentUser();
+                        if (currentUser != null) {
+                            FirebaseAuth.getInstance().signOut();
+                        } else {
+                            Toast.makeText(Login.this, "登入成功", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(Login.this, ManagerLobby.class));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     //網路連線檢查

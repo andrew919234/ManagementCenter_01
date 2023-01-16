@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StaffCRUD">
@@ -14,8 +14,8 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="請輸入名子"
-        android:text="YUI"
         android:inputType="textPersonName"
+        android:text="YUI"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,10 +25,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="204dp"
-        android:text="yui@gmail.com"
         android:ems="10"
         android:hint="請輸入信箱"
         android:inputType="textPersonName"
+        android:text="yui@gmail.com"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,9 +49,9 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="144dp"
         android:ems="10"
-        android:text="88888888"
         android:hint="請輸入統編"
         android:inputType="textPersonName"
+        android:text="88888888"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,27 +63,31 @@
         android:layout_marginTop="264dp"
         android:layout_marginBottom="17dp"
         android:ems="10"
-        android:text="1999/8/11"
         android:hint="請輸入生日"
         android:inputType="textPersonName"
+        android:text="1999/8/11"
         app:layout_constraintBottom_toTopOf="@+id/indate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <EditText
         android:id="@+id/indate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="93dp"
+        android:layout_marginBottom="3dp"
         android:ems="10"
-        android:text="2020/9/11"
         android:hint="到期"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        android:text="2020/9/11"
+        app:layout_constraintBottom_toTopOf="@+id/recycler"
         app:layout_constraintEnd_toEndOf="@+id/editText"
-        app:layout_constraintStart_toStartOf="@+id/spinner_sex"
-        app:layout_constraintTop_toBottomOf="@+id/birth" />
-
+        app:layout_constraintEnd_toStartOf="@+id/button_up"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <Spinner
         android:id="@+id/spinner_sex"
@@ -92,7 +96,6 @@
         android:layout_marginTop="12dp"
         android:entries="@array/option_sex"
         app:layout_constraintEnd_toEndOf="@+id/editText"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/editText"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
 
@@ -100,12 +103,13 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="21dp"
+        android:layout_marginTop="264dp"
+        android:layout_marginBottom="29dp"
         android:backgroundTint="#aaf"
         android:text="新增"
-        app:layout_constraintBottom_toTopOf="@+id/button_up"
+        app:layout_constraintBottom_toTopOf="@+id/indate"
         app:layout_constraintStart_toStartOf="@+id/button_up"
-        app:layout_constraintTop_toBottomOf="@+id/indate" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editText_f"
@@ -143,12 +147,12 @@
         android:id="@+id/button_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
+        android:layout_marginEnd="51dp"
         android:backgroundTint="#aaf"
         android:text="更新"
         app:layout_constraintBottom_toTopOf="@+id/recycler"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/indate" />
 
     <Button
         android:id="@+id/button_de"
@@ -168,7 +172,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_up"
+        app:layout_constraintTop_toBottomOf="@+id/indate"
         tools:listitem="@layout/staff_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
