@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -38,7 +42,6 @@ public class StaffCRUD extends AppCompatActivity {
     private FirebaseAuth auth;
     private LinkedList<User> users = new LinkedList<>();
     private LinkedList<User> users_all = new LinkedList<>();
-    boolean dataExit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +61,6 @@ public class StaffCRUD extends AppCompatActivity {
                 addUser();
             }
         });
-        //可捲動
-//        binding.resultF.setMovementMethod(new ScrollingMovementMethod());
-        //
         binding.buttonUp.setOnClickListener(v -> {
             updateUser();
         });
@@ -98,22 +98,16 @@ public class StaffCRUD extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 users.clear();
                 users_all.clear();
-//                binding.resultF.setText("");
-//                String str = "";
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     User user = ds.getValue(User.class);
                     users.add(user);
                     users_all.add(user);
-//                    str += ar.artistID + "\n" + ar.artistName + "/" + ar.artistGenre + "\n";
                 }
-//                binding.resultF.setText(str);
                 reFAdapter();
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
@@ -128,8 +122,6 @@ public class StaffCRUD extends AppCompatActivity {
         String onBoardTime = binding.indate.getText().toString().trim();
         String sex = binding.spinnerSex.getSelectedItem().toString();
 
-
-//        Query query = db_UserRef.orderByChild("email");//比對資料
         Query query = db_UserRef.orderByChild("email").equalTo(email);//比對資料
         if (!TextUtils.isEmpty(name)) {
             query.addListenerForSingleValueEvent(new ValueEventListener() {//若有相同資料，會啟動query
@@ -178,7 +170,7 @@ public class StaffCRUD extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
+//                            FirebaseUser user = auth.getCurrentUser();
                             Toast.makeText(StaffCRUD.this, "帳號新增成功", Toast.LENGTH_SHORT).show();
                         } else {
 
@@ -242,20 +234,23 @@ public class StaffCRUD extends AppCompatActivity {
                         }
                     }
                     boolean dataApear = false;
+                    String id = "";
                     for (User e : tmp_array) {
                         if (e.email.equals(email)) {
+                            id = e.id;
                             dataApear = true;
-                            Toast.makeText(StaffCRUD.this, "資料已存在", Toast.LENGTH_SHORT).show();
                         }
-                        if (dataApear) {
-                            HashMap<String, Object> new_data = new HashMap<>();
-                            new_data.put("email", email);
-                            new_data.put("name", name);
-                            new_data.put("sex", sex);
-                            db_UserRef.child("email").updateChildren(new_data);
-                            Toast.makeText(StaffCRUD.this, "更新成功", Toast.LENGTH_SHORT).show();
-                            refresh();
-                        }
+                    }
+                    if (dataApear) {
+                        HashMap<String, Object> new_data = new HashMap<>();
+                        new_data.put("email", email);
+                        new_data.put("name", name);
+                        new_data.put("sex", sex);
+                        db_UserRef.child(id).updateChildren(new_data);
+                        Toast.makeText(StaffCRUD.this, "更新成功", Toast.LENGTH_SHORT).show();
+                        refresh();
+                    } else {
+                        Toast.makeText(StaffCRUD.this, "無相符資料", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -336,6 +331,24 @@ public class StaffCRUD extends AppCompatActivity {
             return "Success";
         } catch (Exception e) {
             return "Failed";
+        }
+    }
+    class MyDatePicker implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+            Toast.makeText(StaffCRUD.this,
+                    year + "年" + (month + 1) + "月" + dayOfMonth + "日",
+                    Toast.LENGTH_SHORT).show();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, dayOfMonth);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd EEEE");
+            String show = sdf.format(calendar.getTime());
+
+            binding.editTextF.setText(show);
+
         }
     }
 }

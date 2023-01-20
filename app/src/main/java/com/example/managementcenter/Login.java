@@ -63,10 +63,8 @@ public class Login extends AppCompatActivity {
                     binding.passwordLayout.setError("請輸入密碼");
                 } else if (TextUtils.isEmpty(emailaddress)) {
                     binding.emailLayout.setError("請輸入電子信箱");
-                    return;
                 } else if (TextUtils.isEmpty(password)) {
                     binding.passwordLayout.setError("請輸入密碼");
-                    return;
                 } else {
                     auth = FirebaseAuth.getInstance();
                     auth.signInWithEmailAndPassword(emailaddress, password)
@@ -146,17 +144,20 @@ public class Login extends AppCompatActivity {
                         tmp_array.add(user);
                     }
                 }
+                boolean userAppear = false;
                 for (User e : tmp_array) {
                     if (e.email.equals(emailaddress)) {
                         binding.tvLoginInfo.setText("登入失敗：請改用SupportCenterApp登入");
                         FirebaseUser currentUser = auth.getCurrentUser();
                         if (currentUser != null) {
-                            FirebaseAuth.getInstance().signOut();
-                        } else {
-                            Toast.makeText(Login.this, "登入成功", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(Login.this, ManagerLobby.class));
+                            FirebaseAuth.getInstance().signOut();//登出非管理使用者
                         }
+                        userAppear = true;
                     }
+                }
+                if (!userAppear) {
+                    Toast.makeText(Login.this, "登入成功", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Login.this, ManagerLobby.class));
                 }
             }
 

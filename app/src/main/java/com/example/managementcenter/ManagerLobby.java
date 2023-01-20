@@ -35,6 +35,8 @@ import com.example.managementcenter.databinding.ActivityMainBinding;
 import com.example.managementcenter.databinding.ActivityManagerLobbyBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -50,6 +52,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class ManagerLobby extends AppCompatActivity {
     ActivityManagerLobbyBinding binding;
     private AppBarConfiguration appBarConfiguration;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,14 @@ public class ManagerLobby extends AppCompatActivity {
         binding = ActivityManagerLobbyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        binding.lobbyClockInOut.setOnClickListener(v -> {
+            FirebaseUser currentUser = auth.getCurrentUser();
+            if (currentUser != null) {
+                FirebaseAuth.getInstance().signOut();
+            }
+            finish();
+        });
 
         Resources res = getResources();
         int[] icon = {R.drawable.baseline_work_outline_24,
@@ -156,7 +167,12 @@ public class ManagerLobby extends AppCompatActivity {
             holder.optionButton.setText(string);
             if (string.equals("員工列表")) {
                 holder.optionButton.setOnClickListener(v -> {
-                    holder.itemview.getContext().startActivity(new Intent(holder.itemview.getContext(),StaffCRUD.class));
+                    holder.itemview.getContext().startActivity(new Intent(holder.itemview.getContext(), StaffCRUD.class));
+                });
+            }
+            if (string.equals("班表排班")) {
+                holder.optionButton.setOnClickListener(v -> {
+                    holder.itemview.getContext().startActivity(new Intent(holder.itemview.getContext(), ScheduleActivity.class));
                 });
             }
         }

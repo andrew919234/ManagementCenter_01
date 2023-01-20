@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="@color/blue_700"
-            android:text="@string/login_sign_in" />
+            android:text="@string/login_login_in" />
 
     </LinearLayout>
 

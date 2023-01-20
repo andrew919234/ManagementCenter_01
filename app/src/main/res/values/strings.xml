@@ -1,18 +1,19 @@
 <resources>
     <string name="app_name">ManagementCenter</string>
     <string name="login_forgot">Forgot password?</string>
-    <string name="login_sign_in">Sign in</string>
+    <string name="login_login_in">Login in</string>
     <string name="login_version">Version 1.000.0</string>
     <string name="login_sign_up">Sign up</string>
     <string name="login_email_hint">電子信箱</string>
     <string name="login_password_hint">密碼</string>
+    <string name="schedule">可劃假天數</string>
 
     <array name="option_string">
+        <item>補打卡審核</item>
         <item>員工列表</item>
         <item>休假審核</item>
         <item>班表排班</item>
-        <item>重要公告</item>
-        <item>申請紀錄</item>
+        <item>審核紀錄</item>
     </array>
 
     <array name="option_sex">

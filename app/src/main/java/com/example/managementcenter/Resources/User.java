@@ -1,6 +1,13 @@
 package com.example.managementcenter.Resources;
 
 
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+
+import java.text.DecimalFormat;
+import java.util.Calendar;
+
 //@Entity(tableName = "users_table")
 public class User {
 
@@ -19,6 +26,9 @@ public class User {
     //    @ColumnInfo(name = "onboardtime")
     public String onBoardTime;
 
+    private float staffTenure;//員工年資
+
+
     public User() {
     }
 
@@ -30,8 +40,27 @@ public class User {
         this.sex = sex;
         this.birthday = birthday;
         this.onBoardTime = onBoardTime;
+        int mYear = Integer.parseInt(onBoardTime.substring(0, 4));
+        int mMonth = Integer.parseInt(onBoardTime.substring(5, 7)) - 1;
+        int mDay = Integer.parseInt(onBoardTime.substring(8, 10));
+        Calendar start = Calendar.getInstance();
+        start.set(mYear, mMonth, mDay);
+
+        Calendar end = Calendar.getInstance();
+        end.getTime();
+        long diff = end.getTimeInMillis() - start.getTimeInMillis();
+        double diffYears = diff / (365.25*24 * 60 * 60 * 1000);
+
+        this.staffTenure = (float) diffYears;
     }
 
+    public float getStaffTenure() {
+        return staffTenure;
+    }
+
+    public void setStaffTenure(float staffTenure) {
+        this.staffTenure = staffTenure;
+    }
     public String getId() {
         return id;
     }
@@ -87,4 +116,5 @@ public class User {
     public void setOnBoardTime(String onBoardTime) {
         this.onBoardTime = onBoardTime;
     }
+
 }
