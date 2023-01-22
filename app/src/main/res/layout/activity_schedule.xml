@@ -12,8 +12,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
+
+
 
             <TextView
                 android:id="@+id/tv_days"
@@ -38,20 +40,26 @@
                 android:textColor="@color/blue_500"
                 android:layout_gravity="end"
                 android:layout_marginEnd="18dp"
-                android:text="收起日歷 ▲" />
+                android:text="收起禁假日曆 ▲" />
 
             <com.applandeo.materialcalendarview.CalendarView
                 android:id="@+id/calendarView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_margin="16dp"
                 app:eventsEnabled="true"
                 app:headerColor="@color/blue_700"
-                app:selectionColor="@color/blue_500"
+                app:selectionColor="#FF5858"
                 app:selectionLabelColor="@color/white"
                 app:todayLabelColor="#FF9800"
                 app:type="many_days_picker" />
-
+            <TextView
+                android:id="@+id/tv_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:gravity="end"
+                android:text="選擇人力緊缺(禁劃)日期" />
             <LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="match_parent"
@@ -91,7 +99,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                tools:listitem="@layout/schedule_item" />
+                tools:listitem="@layout/schedule_item" >
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <!--        <Button-->
+                <!--            android:id="@+id/button_SetTarget"-->
+                <!--            android:layout_width="0dp"-->
+                <!--            android:layout_height="wrap_content"-->
+                <!--            android:layout_margin="2dp"-->
+                <!--            android:layout_weight="1"-->
+                <!--            android:text="設置標記" />-->
+
+                <Button
+                    android:id="@+id/bt_schedule_retry"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/black"
+                    android:text="重新排班" />
+
+
+                <Button
+                    android:id="@+id/bt_schedule_apply"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:text="確認送出" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
