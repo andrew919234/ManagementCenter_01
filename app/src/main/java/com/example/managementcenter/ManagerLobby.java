@@ -2,6 +2,7 @@ package com.example.managementcenter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,6 +14,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -25,15 +27,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.managementcenter.databinding.ActivityMainBinding;
 import com.example.managementcenter.databinding.ActivityManagerLobbyBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,14 +67,6 @@ public class ManagerLobby extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-        binding.lobbyClockInOut.setOnClickListener(v -> {
-            FirebaseUser currentUser = auth.getCurrentUser();
-            if (currentUser != null) {
-                FirebaseAuth.getInstance().signOut();
-            }
-            finish();
-        });
-
         Resources res = getResources();
         int[] icon = {R.drawable.baseline_work_outline_24,
                 R.drawable.baseline_work_outline_24,
@@ -84,6 +82,41 @@ public class ManagerLobby extends AppCompatActivity {
         binding.rvOption.setAdapter(adapterF);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 0, 0, "登出").setIcon(android.R.drawable.ic_menu_set_as).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case 0:
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(binding.getRoot().getContext());//初始化BottomSheet
+                View view = LayoutInflater.from(ManagerLobby.this).inflate(R.layout.bottom_sheet_logout, null);//連結的介面
+                Button btCancel = view.findViewById(R.id.button_cancel);
+                Button bt01 = view.findViewById(R.id.button_sheet_out);
+                bottomSheetDialog.setContentView(view);//將介面載入至BottomSheet内
+                ViewGroup parent = (ViewGroup) view.getParent();//取得BottomSheet介面設定
+                parent.setBackgroundResource(android.R.color.transparent);//將背景設為透明,否則預設白底
+                bt01.setOnClickListener((v) -> {
+                    bottomSheetDialog.dismiss();
+                    FirebaseUser currentUser = auth.getCurrentUser();
+                    if (currentUser != null) {
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                    finish();
+                });
+                btCancel.setOnClickListener((v) -> {
+                    bottomSheetDialog.dismiss();
+                });
+                bottomSheetDialog.show();//顯示BottomSheet
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onResume() {
@@ -182,73 +215,6 @@ public class ManagerLobby extends AppCompatActivity {
             return optionIcon.length;
         }
     }
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        new MyAsyncTask().execute();
-//
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        binding = null;
-//    }
-//
-//    private String fetchWeatherDate() {
-//        try {
-//            String url = "https://supportcenter-dded7-default-rtdb.firebaseio.com/";
-////            URL url = new URL(
-////                    "https://supportcenter-dded7-default-rtdb.firebaseio.com/");
-//            FirebaseDatabase database = FirebaseDatabase.getInstance(FirebaseApp.getInstance()
-//                    , url);
-//            DatabaseReference myRef = database.getReference("message");
-//
-//            myRef.setValue("Hello, World!");
-//
-////            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-////            InputStream is = conn.getInputStream();
-////            byte[] cache = new byte[1024];
-////            is.read(cache);
-//            return "Success";
-//        } catch (Exception e) {
-//            return "Failed";
-//        }
-//    }
-//
-//
-//    private class MyAsyncTask extends AsyncTask<String, Integer, String> {
-//
-//        @Override
-//        protected String doInBackground(String... strings) {
-//            return fetchWeatherDate();
-//        }
-//
-//        //觀察
-//        @Override
-//        protected void onPostExecute(String s) {
-//            super.onPostExecute(s);
-//            try {
-//                JSONObject jobj = new JSONObject(s);
-//                JSONArray jobjarrayWeather = jobj.getJSONArray("weather");
-//                JSONObject jobjWeather = jobjarrayWeather.getJSONObject(0);
-//                String main = jobjWeather.getString("main");
-//                String description = jobjWeather.getString("description");
-//
-//                JSONObject jobjMain = jobj.getJSONObject("main");
-//                double temp_main = jobjMain.getDouble("temp") - 273.15;
-//                double temp_min = jobjMain.getDouble("temp_min") - 273.15;
-//                double temp_max = jobjMain.getDouble("temp_max") - 273.15;
-//                JSONObject wind = jobj.getJSONObject("wind");
-//                double speed = wind.getDouble("speed") * 60 * 60 / 1000;
-//                int deg = wind.getInt("deg");
-//
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
 
 
 }

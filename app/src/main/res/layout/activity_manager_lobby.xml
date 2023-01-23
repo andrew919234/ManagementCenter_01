@@ -62,13 +62,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:text="位址" />
-            <Button
-                android:id="@+id/lobby_clockInOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#f77"
-                android:text="打卡"
-                android:textAllCaps="false" />
             </LinearLayout>
 
             <!--            <androidx.recyclerview.widget.RecyclerView-->
