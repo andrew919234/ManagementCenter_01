@@ -5,7 +5,7 @@
 <h3>Day off rule setting</h3>
 <img src="https://user-images.githubusercontent.com/121853769/223647772-c062b4b3-a57f-484d-8c04-90286cd89741.gif" width=25% height=25%>
 <h3>functional graph</h3>
-![2023_03](https://user-images.githubusercontent.com/121853769/223656059-0ea07176-b4bf-4ce0-8299-2063c08e99ba.jpg)
+<img src="https://user-images.githubusercontent.com/121853769/223656059-0ea07176-b4bf-4ce0-8299-2063c08e99ba.jpg" width=50% height=50%>
 
 Android<br>
 Emulator：Pixel 4 API 30<br>
